@@ -4,9 +4,12 @@ import folium
 from streamlit_folium import st_folium
 import plotly.express as px
 
+# -----------------------------
+# Load Data
+# -----------------------------
 @st.cache_data
 def load_data():
-    df = pd.read_csv("events_upgraded.csv")
+    df = pd.read_csv("events.csv")
     return df
 
 df = load_data()
@@ -15,6 +18,9 @@ st.set_page_config(page_title="Chicago Events Analyzer", layout="wide")
 st.title("Chicago Events Analyzer for Local Style Potato Chips")
 st.markdown("This app evaluates Chicago events for Local Style Potato Chips marketing opportunities. Filter events, adjust weights and budget, and explore ROI & FitScores.")
 
+# -----------------------------
+# Sidebar Filters
+# -----------------------------
 st.sidebar.header("Filters")
 month_order = ["January","February","March","April","May","June","July","August","September","October","November","December"]
 season_order = ["Winter","Spring","Summer","Fall"]
@@ -25,11 +31,17 @@ ticket_filter = st.sidebar.multiselect("Free or Ticketed:", options=sorted(df["F
 
 filtered_df = df[(df["Season"].isin(season_filter)) & (df["Month"].isin(month_filter)) & (df["Category"].isin(category_filter)) & (df["Free_or_Ticketed"].isin(ticket_filter))]
 
+# -----------------------------
+# Cost Adjustments & Budget
+# -----------------------------
 st.sidebar.header("Budget & Cost Adjustment")
 cost_adjustment = st.sidebar.number_input("Cost Adjustment Multiplier", min_value=0.1, max_value=3.0, value=1.0, step=0.1)
 filtered_df["AdjustedCost"] = filtered_df["Estimated_Sponsorship_Cost"] * cost_adjustment
 budget = st.sidebar.number_input("Total Marketing Budget ($)", min_value=0, value=50000, step=1000)
 
+# -----------------------------
+# Scoring Weights
+# -----------------------------
 st.sidebar.header("Scoring Weights")
 attendance_w = st.sidebar.slider("Weight: Attendance", 0.0, 1.0, 0.3)
 publicity_w = st.sidebar.slider("Weight: Publicity Score", 0.0, 1.0, 0.2)
@@ -38,6 +50,9 @@ media_w = st.sidebar.slider("Weight: Media Coverage", 0.0, 1.0, 0.2)
 cost_w = st.sidebar.slider("Weight: Sponsorship Cost (penalty)", 0.0, 1.0, 0.1)
 demo_w = st.sidebar.slider("Weight: Demographics Alignment", 0.0, 1.0, 0.1)
 
+# -----------------------------
+# FitScore & ROI Calculations
+# -----------------------------
 filtered_df["NormAttendance"] = filtered_df["Attendance"] / filtered_df["Attendance"].max()
 filtered_df["NormCost"] = filtered_df["AdjustedCost"] / filtered_df["AdjustedCost"].max()
 demo_scores = {"Families": 1.0, "Young Adults": 0.9, "Sports Fans": 0.8, "Cultural Communities": 0.7, "General Public": 0.8}
@@ -45,6 +60,9 @@ filtered_df["DemoScore"] = filtered_df["Demographic"].map(demo_scores).fillna(0.
 filtered_df["DynamicFitScore"] = (attendance_w * filtered_df["NormAttendance"] + publicity_w * (filtered_df["Publicity_Score"]/10) + pride_w * (filtered_df["PrideFactor"]/10) + media_w * (filtered_df["Media_Coverage_Score"]/10) + demo_w * filtered_df["DemoScore"] - cost_w * filtered_df["NormCost"])
 filtered_df["ROI"] = ((filtered_df["Attendance"] * filtered_df["Publicity_Score"] * filtered_df["Media_Coverage_Score"])/filtered_df["AdjustedCost"]).round(2)
 
+# -----------------------------
+# Tabs
+# -----------------------------
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["Dashboard","Visualizations","Map","Info","Recommended Events"])
 
 with tab1:
