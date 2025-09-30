@@ -25,13 +25,33 @@ st.markdown(
 # Sidebar Filters
 # -----------------------------
 st.sidebar.header("Filters")
-month_order = ["January","February","March","April","May","June","July","August","September","October","November","December"]
-season_order = ["Winter","Spring","Summer","Fall"]
-month_filter = st.sidebar.multiselect("Select Month(s):", options=month_order, default=month_order)
-season_filter = st.sidebar.multiselect("Select Season(s):", options=season_order, default=season_order)
-category_filter = st.sidebar.multiselect("Select Category(ies):", options=sorted(df["Category"].unique()), default=sorted(df["Category"].unique()))
-ticket_filter = st.sidebar.multiselect("Free or Ticketed:", options=sorted(df["Free_or_Ticketed"].unique()), default=sorted(df["Free_or_Ticketed"].unique()))
 
+# Default: all unique values in dataset
+month_filter = st.sidebar.multiselect(
+    "Select Month(s):",
+    options=df["Month"].sort_values().unique(),
+    default=df["Month"].sort_values().unique()
+)
+
+season_filter = st.sidebar.multiselect(
+    "Select Season(s):",
+    options=df["Season"].sort_values().unique(),
+    default=df["Season"].sort_values().unique()
+)
+
+category_filter = st.sidebar.multiselect(
+    "Select Category(ies):",
+    options=sorted(df["Category"].unique()),
+    default=sorted(df["Category"].unique())
+)
+
+ticket_filter = st.sidebar.multiselect(
+    "Free or Ticketed:",
+    options=sorted(df["Free_or_Ticketed"].unique()),
+    default=sorted(df["Free_or_Ticketed"].unique())
+)
+
+# Apply filters only if selections are not empty
 filtered_df = df[
     (df["Season"].isin(season_filter)) &
     (df["Month"].isin(month_filter)) &
