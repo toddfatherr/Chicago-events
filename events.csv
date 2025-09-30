@@ -1,0 +1,86 @@
+Event,Month,Season,Category,Attendance,Demographic,Emotional_Connection,Publicity_Score,PrideFactor,FitScore,Free_or_Ticketed,Location
+Chicago Pride Parade,June,Summer,Parade,1000000,Young Adults,Community Pride,10,10,9.3,Free,Lakeview
+Taste of Chicago,July,Summer,Food Festival,1500000,Families,Food Celebration,9,10,9.5,Free,Grant Park
+Chicago Marathon,October,Fall,Sports,1700000,Sports Fans,Inspiration,9,9,8.2,Free,Downtown
+Lollapalooza,August,Summer,Music Festival,400000,Young Adults,Celebration,10,8,8.9,Ticketed,Grant Park
+Cubs Season (Home Games),April–Sept,Spring–Fall,Sports,3200000,Sports Fans,Tradition,9,9,8.8,Ticketed,Wrigleyville
+White Sox Season (Home Games),April–Sept,Spring–Fall,Sports,2400000,Sports Fans,Tradition,8,8,7.5,Ticketed,Bridgeport
+Bears Season (Home Games),Sept–Dec,Fall–Winter,Sports,480000,Sports Fans,Tradition,8,9,8.0,Ticketed,Soldier Field
+Bulls Season (Home Games),Oct–Apr,Fall–Spring,Sports,820000,Sports Fans,Tradition,8,8,7.8,Ticketed,United Center
+Blackhawks Season (Home Games),Oct–Apr,Fall–Spring,Sports,860000,Sports Fans,Tradition,8,8,7.9,Ticketed,United Center
+Chicago Fire Season (Home Games),March–Oct,Spring–Fall,Sports,340000,Sports Fans,Community Pride,7,7,6.5,Ticketed,Soldier Field
+St. Patrick’s Day Parade & River Dye,March,Spring,Parade,500000,General Public,Tradition,9,9,8.5,Free,Downtown
+South Side Irish Parade,March,Spring,Parade,200000,Families,Tradition,8,8,7.0,Free,Beverly
+Chicago Air & Water Show,August,Summer,Spectacle,2000000,Families,Spectacle,10,9,9.2,Free,Lakefront
+Christkindlmarket,December,Winter,Holiday Market,1000000,Families,Tradition,8,8,8.3,Free,Daley Plaza
+ZooLights at Lincoln Park Zoo,Dec–Jan,Winter,Holiday Lights,500000,Families,Spectacle,8,7,7.5,Free,Lincoln Park
+Magnificent Mile Lights Festival,November,Fall,Parade,1000000,Families,Tradition,9,9,8.7,Free,Michigan Avenue
+Thanksgiving Parade,November,Fall,Parade,400000,Families,Tradition,8,8,7.9,Free,Downtown
+New Year’s Eve Navy Pier Fireworks,December,Winter,Holiday Spectacle,300000,Young Adults,Celebration,9,8,8.2,Free,Navy Pier
+Fourth of July Fireworks at Navy Pier,July,Summer,Holiday Spectacle,500000,Families,Tradition,9,9,8.9,Free,Navy Pier
+Chicago Auto Show,February,Winter,Expo,1000000,General Public,Spectacle,8,7,7.6,Ticketed,McCormick Place
+C2E2 Comic & Entertainment Expo,April,Spring,Expo,100000,Young Adults,Celebration,8,7,7.2,Ticketed,McCormick Place
+EXPO Chicago,April,Spring,Expo,50000,General Public,Inspiration,7,7,6.5,Ticketed,Navy Pier
+Chicago Latino Film Festival,April,Spring,Cultural,35000,Cultural Communities,Community Pride,7,7,6.6,Ticketed,Various Theaters
+Chicago International Film Festival,October,Fall,Cultural,50000,Young Adults,Inspiration,8,8,7.4,Ticketed,AMC River East
+Chicago Blues Festival,June,Summer,Music Festival,500000,General Public,Community Pride,9,9,8.6,Free,Millennium Park
+Chicago Jazz Festival,August,Summer,Music Festival,200000,General Public,Community Pride,8,8,7.7,Free,Millennium Park
+Pitchfork Music Festival,July,Summer,Music Festival,50000,Young Adults,Celebration,8,7,7.1,Ticketed,Union Park
+Riot Fest,September,Fall,Music Festival,50000,Young Adults,Celebration,8,7,7.1,Ticketed,Douglas Park
+North Coast Music Festival,September,Fall,Music Festival,20000,Young Adults,Celebration,7,6,6.0,Ticketed,SeatGeek Stadium
+Taste of Randolph,June,Summer,Food Festival,60000,Young Adults,Food Celebration,8,7,7.2,Ticketed,West Loop
+Wicker Park Fest,July,Summer,Street Festival,70000,Young Adults,Celebration,8,7,7.3,Ticketed,Wicker Park
+Do Division Street Fest,June,Summer,Street Festival,50000,Young Adults,Celebration,7,7,6.8,Ticketed,Wicker Park
+Maifest (Lincoln Square),May,Spring,Cultural,40000,Families,Tradition,7,7,6.6,Ticketed,Lincoln Square
+Belmont-Sheffield Music Fest,May,Spring,Street Festival,50000,Young Adults,Celebration,7,7,6.7,Ticketed,Lakeview
+Taste of Polonia,September,Fall,Cultural,35000,Cultural Communities,Tradition,7,7,6.5,Ticketed,Jefferson Park
+Chicago Gourmet,September,Fall,Food Festival,15000,Families,Food Celebration,8,7,7.0,Ticketed,Millennium Park
+Chosen Few House Picnic,July,Summer,Music Festival,35000,Young Adults,Celebration,7,7,6.6,Ticketed,Jackson Park
+Chinatown Summer Fair,July,Summer,Cultural,40000,Families,Community Pride,7,7,6.7,Free,Chinatown
+Bud Billiken Parade,August,Summer,Parade,1000000,Families,Community Pride,9,9,8.8,Free,Bronzeville
+Polish Constitution Day Parade,May,Spring,Parade,25000,Cultural Communities,Tradition,6,7,6.0,Free,Downtown
+Chicago Restaurant Week,January,Winter,Food Festival,250000,Families,Food Celebration,7,7,6.9,Ticketed,Various
+One of a Kind Show,December,Winter,Expo,60000,Families,Tradition,7,7,6.6,Ticketed,Merchandise Mart
+SOFA Art Show,November,Fall,Expo,30000,General Public,Inspiration,7,6,6.0,Ticketed,Navy Pier
+Maxwell Street Market (season),May–Oct,Spring–Fall,Market,50000,Families,Tradition,6,6,5.5,Free,Near South Side
+Chicago Flower & Garden Show,March,Spring,Expo,20000,Families,Inspiration,6,6,5.7,Ticketed,Navy Pier
+Polar Adventure Days,January,Winter,Spectacle,5000,Families,Spectacle,5,5,4.8,Free,Northerly Island
+Winter Brew,January,Winter,Food Festival,2000,Young Adults,Food Celebration,5,5,4.5,Ticketed,Lincoln Square
+Groundhog Days (Woodstock, IL),February,Winter,Cultural,20000,Families,Tradition,5,5,4.9,Free,Suburbs
+Big Ten Basketball Tournament,March,Spring,Sports,20000,Sports Fans,Tradition,8,8,7.2,Ticketed,United Center
+Cubs vs White Sox Crosstown Classic,May,Spring,Sports,35000,Sports Fans,Tradition,9,9,8.4,Ticketed,Wrigley/Guaranteed Rate
+Soldier Field Summer Concert,June,Summer,Spectacle,60000,Young Adults,Celebration,9,8,8.2,Ticketed,Soldier Field
+James Beard Awards Week,June,Summer,Food Festival,15000,Families,Food Celebration,7,7,6.5,Ticketed,Various
+Chicago Gospel Music Festival,June,Summer,Music Festival,50000,Families,Community Pride,7,7,6.6,Free,Millennium Park
+Taste of Greektown,August,Summer,Cultural,40000,Cultural Communities,Food Celebration,7,7,6.7,Free,Greektown
+Taste of Mexico,September,Fall,Cultural,40000,Cultural Communities,Food Celebration,7,7,6.7,Free,Pilsen
+Taste of India,August,Summer,Cultural,30000,Cultural Communities,Food Celebration,7,7,6.6,Free,Devon Avenue
+Chicago Craft Beer Festival,July,Summer,Food Festival,20000,Young Adults,Celebration,7,6,6.1,Ticketed,Lincoln Park
+Hot Dog Fest,August,Summer,Food Festival,20000,Families,Food Celebration,7,7,6.3,Ticketed,Lincoln Park
+Lincoln Park Mayfest,May,Spring,Street Festival,20000,Young Adults,Celebration,6,6,5.8,Ticketed,Lakeview
+Windy City Smokeout,July,Summer,Food Festival,20000,Young Adults,Food Celebration,7,7,6.2,Ticketed,United Center Lot
+Chicago Craft Spirits Festival,October,Fall,Food Festival,15000,Young Adults,Celebration,6,6,5.8,Ticketed,West Loop
+Chicago Pizza Summit,April,Spring,Food Festival,5000,Families,Food Celebration,6,6,5.5,Ticketed,Logan Square
+Chicago Vegan Festival,July,Summer,Food Festival,10000,Young Adults,Food Celebration,6,6,5.7,Ticketed,Grant Park
+Chicago Salsa Festival,July,Summer,Music Festival,15000,Cultural Communities,Celebration,6,6,5.8,Ticketed,Rosemont
+Chicago Tango Festival,April,Spring,Music Festival,5000,Young Adults,Tradition,5,5,4.7,Ticketed,Logan Square
+Chicago House Music Festival,May,Spring,Music Festival,20000,Young Adults,Celebration,6,6,5.7,Free,Millennium Park
+Chicago Asian Film Festival,November,Fall,Cultural,5000,Cultural Communities,Inspiration,6,6,5.6,Ticketed,Various
+Chicago Black Film Festival,October,Fall,Cultural,10000,Cultural Communities,Community Pride,6,6,5.8,Ticketed,Various
+Chicago Architecture Open House,October,Fall,Cultural,50000,General Public,Inspiration,7,7,6.6,Free,Citywide
+Chicago Theatre Week,February,Winter,Cultural,20000,General Public,Tradition,7,7,6.4,Ticketed,Various
+Chicago Symphony in the Park,August,Summer,Music Festival,20000,Families,Tradition,6,6,5.9,Free,Grant Park
+Grant Park Music Festival,June–Aug,Summer,Music Festival,30000,Families,Tradition,6,6,5.9,Free,Grant Park
+Taste of Lincoln Avenue,July,Summer,Food Festival,20000,Families,Food Celebration,7,6,6.2,Ticketed,Lincoln Park
+Taste of Hyde Park,August,Summer,Food Festival,15000,Families,Food Celebration,6,6,5.8,Free,Hyde Park
+Taste of Rogers Park,September,Fall,Food Festival,10000,Families,Food Celebration,6,6,5.7,Free,Rogers Park
+Pilsen Arts Festival,August,Summer,Cultural,15000,Cultural Communities,Community Pride,6,6,5.8,Free,Pilsen
+Puerto Rican Festival (Fiestas Puertorriqueñas),June,Summer,Cultural,40000,Cultural Communities,Community Pride,7,7,6.7,Free,Humboldt Park
+Mexican Independence Parade,September,Fall,Parade,50000,Cultural Communities,Community Pride,7,7,6.8,Free,Little Village
+West Indian Parade,August,Summer,Parade,30000,Cultural Communities,Community Pride,6,6,5.8,Free,Uptown
+Polish Fest,June,Summer,Cultural,30000,Cultural Communities,Tradition,6,6,5.7,Ticketed,Avondale
+Italian Fest (Taylor Street Festa Italiana),August,Summer,Cultural,40000,Cultural Communities,Food Celebration,7,7,6.7,Free,Little Italy
+Chicago African Fest,September,Fall,Cultural,20000,Cultural Communities,Community Pride,6,6,5.7,Free,Washington Park
+Chicago Gay Black Pride,July,Summer,Cultural,20000,Young Adults,Community Pride,7,7,6.7,Free,Various
+Chicago Halloween Parade (Northalsted),October,Fall,Parade,30000,Young Adults,Celebration,7,7,6.6,Free,Lakeview
+Chicago Thanksgiving Turkey Trot,November,Fall,Sports,8000,Families,Tradition,6,6,5.5,Ticketed,Downtown
