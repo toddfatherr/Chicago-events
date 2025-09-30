@@ -1,153 +1,117 @@
 import streamlit as st
 import pandas as pd
+import folium
+from streamlit_folium import st_folium
+import plotly.express as px
 
-# --------------------------
-# Simple password gate
-# --------------------------
-st.set_page_config(page_title="Local Style Chips: Chicago Event Fit Calculator", layout="wide")
-
-# Set your password here
-PASSWORD = "chips2025"
-
-# Ask user to enter password
-password = st.text_input("Enter access code:", type="password")
-
-if password != PASSWORD:
-    st.warning("Please enter the correct access code to continue.")
-    st.stop()
-
-
-# --------------------------
-# Page setup
-# --------------------------
-st.set_page_config(
-    page_title="Local Style Chips: Chicago Event Fit Calculator",
-    layout="wide"
-)
-
-# --------------------------
-# Load data
-# --------------------------
 @st.cache_data
 def load_data():
-    return pd.read_csv("events.csv")
+    df = pd.read_csv("events_upgraded.csv")
+    return df
 
 df = load_data()
 
-st.title("Local Style Potato Chips — Chicago Event Fit Calculator")
+st.set_page_config(page_title="Chicago Events Analyzer", layout="wide")
+st.title("Chicago Events Analyzer for Local Style Potato Chips")
+st.markdown("This app evaluates Chicago events for Local Style Potato Chips marketing opportunities. Filter events, adjust weights and budget, and explore ROI & FitScores.")
 
-# --------------------------
-# Sidebar filters
-# --------------------------
 st.sidebar.header("Filters")
+month_order = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+season_order = ["Winter","Spring","Summer","Fall"]
+month_filter = st.sidebar.multiselect("Select Month(s):", options=month_order, default=month_order)
+season_filter = st.sidebar.multiselect("Select Season(s):", options=season_order, default=season_order)
+category_filter = st.sidebar.multiselect("Select Category(ies):", options=sorted(df["Category"].unique()), default=sorted(df["Category"].unique()))
+ticket_filter = st.sidebar.multiselect("Free or Ticketed:", options=sorted(df["Free_or_Ticketed"].unique()), default=sorted(df["Free_or_Ticketed"].unique()))
 
-season_filter = st.sidebar.multiselect("Season", sorted(df["Season"].dropna().unique()))
-month_filter = st.sidebar.multiselect("Month", sorted(df["Month"].dropna().unique()))
-category_filter = st.sidebar.multiselect("Category", sorted(df["Category"].dropna().unique()))
-demo_filter = st.sidebar.multiselect("Demographic", sorted(df["Demographic"].dropna().unique()))
-min_attendance = st.sidebar.number_input("Minimum Attendance", min_value=0, value=0, step=5000)
+filtered_df = df[(df["Season"].isin(season_filter)) & (df["Month"].isin(month_filter)) & (df["Category"].isin(category_filter)) & (df["Free_or_Ticketed"].isin(ticket_filter))]
 
-filtered = df.copy()
-if season_filter:
-    filtered = filtered[filtered["Season"].isin(season_filter)]
-if month_filter:
-    filtered = filtered[filtered["Month"].isin(month_filter)]
-if category_filter:
-    filtered = filtered[filtered["Category"].isin(category_filter)]
-if demo_filter:
-    filtered = filtered[filtered["Demographic"].isin(demo_filter)]
-filtered = filtered[filtered["Attendance"] >= min_attendance]
+st.sidebar.header("Budget & Cost Adjustment")
+cost_adjustment = st.sidebar.number_input("Cost Adjustment Multiplier", min_value=0.1, max_value=3.0, value=1.0, step=0.1)
+filtered_df["AdjustedCost"] = filtered_df["Estimated_Sponsorship_Cost"] * cost_adjustment
+budget = st.sidebar.number_input("Total Marketing Budget ($)", min_value=0, value=50000, step=1000)
 
-# --------------------------
-# Sidebar weights
-# --------------------------
-st.sidebar.header("Weights (adjust importance)")
+st.sidebar.header("Scoring Weights")
+attendance_w = st.sidebar.slider("Weight: Attendance", 0.0, 1.0, 0.3)
+publicity_w = st.sidebar.slider("Weight: Publicity Score", 0.0, 1.0, 0.2)
+pride_w = st.sidebar.slider("Weight: Pride Factor", 0.0, 1.0, 0.2)
+media_w = st.sidebar.slider("Weight: Media Coverage", 0.0, 1.0, 0.2)
+cost_w = st.sidebar.slider("Weight: Sponsorship Cost (penalty)", 0.0, 1.0, 0.1)
+demo_w = st.sidebar.slider("Weight: Demographics Alignment", 0.0, 1.0, 0.1)
 
-w_attendance = st.sidebar.slider("Attendance", 0.0, 1.0, 0.20, 0.05)
-w_demo = st.sidebar.slider("Demographic", 0.0, 1.0, 0.30, 0.05)
-w_emotion = st.sidebar.slider("Emotional Connection", 0.0, 1.0, 0.25, 0.05)
-w_publicity = st.sidebar.slider("Publicity", 0.0, 1.0, 0.15, 0.05)
-w_pride = st.sidebar.slider("Pride", 0.0, 1.0, 0.10, 0.05)
+filtered_df["NormAttendance"] = filtered_df["Attendance"] / filtered_df["Attendance"].max()
+filtered_df["NormCost"] = filtered_df["AdjustedCost"] / filtered_df["AdjustedCost"].max()
+demo_scores = {"Families": 1.0, "Young Adults": 0.9, "Sports Fans": 0.8, "Cultural Communities": 0.7, "General Public": 0.8}
+filtered_df["DemoScore"] = filtered_df["Demographic"].map(demo_scores).fillna(0.6)
+filtered_df["DynamicFitScore"] = (attendance_w * filtered_df["NormAttendance"] + publicity_w * (filtered_df["Publicity_Score"]/10) + pride_w * (filtered_df["PrideFactor"]/10) + media_w * (filtered_df["Media_Coverage_Score"]/10) + demo_w * filtered_df["DemoScore"] - cost_w * filtered_df["NormCost"])
+filtered_df["ROI"] = ((filtered_df["Attendance"] * filtered_df["Publicity_Score"] * filtered_df["Media_Coverage_Score"])/filtered_df["AdjustedCost"]).round(2)
 
-# normalize so they sum to 1
-weight_sum = w_attendance + w_demo + w_emotion + w_publicity + w_pride
-if weight_sum == 0:
-    weight_sum = 1
-w_attendance /= weight_sum
-w_demo /= weight_sum
-w_emotion /= weight_sum
-w_publicity /= weight_sum
-w_pride /= weight_sum
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Dashboard","Visualizations","Map","Info","Recommended Events"])
 
-# --------------------------
-# Compute Dynamic Fit Score
-# --------------------------
-def calc_fit_score(row):
-    # scale attendance 0–10
-    att_scaled = 10 * (row["Attendance"] - df["Attendance"].min()) / (df["Attendance"].max() - df["Attendance"].min())
-    return round(
-        w_attendance * att_scaled +
-        w_demo * 10 +   # demographic baseline weight (treat as categorical strength)
-        w_emotion * row["Publicity_Score"] +
-        w_publicity * row["PrideFactor"] +
-        w_pride * row["FitScore"],
-        2
-    )
+with tab1:
+    st.subheader("Filtered Events")
+    st.dataframe(filtered_df[["Event","Month","Season","Category","Demographic","Attendance","AdjustedCost","Free_or_Ticketed","Location","DynamicFitScore","ROI"]].sort_values(by="DynamicFitScore", ascending=False))
+    csv_export = filtered_df.to_csv(index=False).encode("utf-8")
+    st.download_button(label="Download Filtered Data as CSV", data=csv_export, file_name="filtered_events.csv", mime="text/csv")
 
-filtered = filtered.copy()
-filtered["DynamicFitScore"] = filtered.apply(calc_fit_score, axis=1)
+with tab2:
+    st.subheader("Event Category Breakdown")
+    fig_pie = px.pie(filtered_df, names="Category")
+    st.plotly_chart(fig_pie, use_container_width=True)
+    st.subheader("Seasonal Event Counts")
+    season_counts = filtered_df["Season"].value_counts().reset_index()
+    season_counts.columns = ["Season","Count"]
+    fig_season = px.bar(season_counts, x="Season", y="Count", color="Season")
+    st.plotly_chart(fig_season, use_container_width=True)
+    st.subheader("Demographic Breakdown")
+    demo_counts = filtered_df["Demographic"].value_counts().reset_index()
+    demo_counts.columns = ["Demographic","Count"]
+    fig_demo = px.bar(demo_counts, x="Demographic", y="Count", color="Demographic")
+    st.plotly_chart(fig_demo, use_container_width=True)
 
-# --------------------------
-# Display filtered events
-# --------------------------
-st.subheader("📋 Filtered Events")
-st.dataframe(filtered[[
-    "Event","Month","Season","Category","Attendance","Demographic",
-    "Emotional_Connection","Publicity_Score","PrideFactor","DynamicFitScore",
-    "Free_or_Ticketed","Location"
-]])
+with tab3:
+    st.subheader("Map of Events")
+    m = folium.Map(location=[41.8781, -87.6298], zoom_start=11)
+    for _, row in filtered_df.iterrows():
+        popup_text = f"<b>{row['Event']}</b><br>Category: {row['Category']}<br>Demographic: {row['Demographic']}<br>Attendance: {row['Attendance']:,}<br>Sponsorship Cost: ${row['AdjustedCost']:,}<br>FitScore: {row['DynamicFitScore']:.2f}<br>ROI: {row['ROI']}"
+        folium.Marker(location=[row["Latitude"], row["Longitude"]], popup=popup_text, tooltip=row["Event"]).add_to(m)
+    st_map = st_folium(m, width=900, height=600)
 
-# --------------------------
-# Top events
-# --------------------------
-st.subheader("Top Recommended Events")
-top_n = st.slider("How many top events?", 5, 25, 10)
-top_events = filtered.sort_values("DynamicFitScore", ascending=False).head(top_n)
-st.bar_chart(top_events.set_index("Event")["DynamicFitScore"])
+with tab4:
+    st.subheader("How Scoring and ROI Are Calculated")
+    st.markdown("**Dynamic FitScore** combines normalized attendance, publicity, pride, media, demographics, and cost penalty.  **ROI** estimates marketing return per dollar spent.\nFormulas:\n```\nFitScore = (Attendance_w * NormAttendance) + (Publicity_w * Publicity/10) + (Pride_w * PrideFactor/10) + (Media_w * MediaCoverage/10) + (Demo_w * DemoScore) - (Cost_w * NormCost)\nROI = (Attendance * Publicity Score * Media Coverage Score) / AdjustedCost\n```\nAdjust all weights and budget using the sidebar sliders.")
 
-# --------------------------
-# Download buttons
-# --------------------------
-st.subheader("Download Results")
-
-st.download_button(
-    "Download Filtered Events as CSV",
-    data=filtered.to_csv(index=False).encode("utf-8"),
-    file_name="filtered_events.csv",
-    mime="text/csv"
-)
-
-st.download_button(
-    "Download Top Events as CSV",
-    data=top_events.to_csv(index=False).encode("utf-8"),
-    file_name="top_events.csv",
-    mime="text/csv"
-)
-
-# --------------------------
-# Quick insights
-# --------------------------
-st.subheader("Quick Insights")
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.write("By Category")
-    st.bar_chart(filtered["Category"].value_counts())
-
-with col2:
-    st.write("By Season")
-    st.bar_chart(filtered["Season"].value_counts())
-
-with col3:
-    st.write("By Demographic")
-    st.bar_chart(filtered["Demographic"].value_counts())
+with tab5:
+    st.subheader("Recommended Events Within Total Budget")
+    if filtered_df.empty:
+        st.warning("No events available with current filters.")
+    else:
+        budget_df = filtered_df[filtered_df["AdjustedCost"] <= budget].copy()
+        if budget_df.empty:
+            st.warning("No events fit within the total budget.")
+        else:
+            budget_df["NormFitScore"] = budget_df["DynamicFitScore"] / budget_df["DynamicFitScore"].max()
+            budget_df["NormROI"] = budget_df["ROI"] / budget_df["ROI"].max()
+            budget_df["CombinedScore"] = (budget_df["NormFitScore"] + budget_df["NormROI"]) / 2
+            events = budget_df.to_dict('records')
+            n = len(events)
+            W = int(budget)
+            costs = [int(e["AdjustedCost"]) for e in events]
+            values = [e["CombinedScore"] for e in events]
+            dp = [[0]*(W+1) for _ in range(n+1)]
+            for i in range(1,n+1):
+                for w in range(W+1):
+                    if costs[i-1] <= w:
+                        dp[i][w] = max(dp[i-1][w], dp[i-1][w-costs[i-1]] + values[i-1])
+                    else:
+                        dp[i][w] = dp[i-1][w]
+            w = W
+            selected_indices = []
+            for i in range(n,0,-1):
+                if dp[i][w] != dp[i-1][w]:
+                    selected_indices.append(i-1)
+                    w -= costs[i-1]
+            recommended_events = [events[i] for i in selected_indices]
+            recommended_df = pd.DataFrame(recommended_events).sort_values(by="CombinedScore", ascending=False)
+            st.dataframe(recommended_df[["Event","Month","Season","Category","Demographic","Attendance","AdjustedCost","DynamicFitScore","ROI","CombinedScore"]])
+            csv_export = recommended_df.to_csv(index=False).encode("utf-8")
+            st.download_button(label="Download Optimized Events CSV", data=csv_export, file_name="optimized_events.csv", mime="text/csv")
