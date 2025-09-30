@@ -10,6 +10,11 @@ import plotly.express as px
 @st.cache_data
 def load_data():
     df = pd.read_csv("events.csv")
+    # Clean numeric columns (remove commas)
+    df["Attendance"] = pd.to_numeric(df["Attendance"].astype(str).str.replace(",",""), errors="coerce")
+    df["Estimated_Sponsorship_Cost"] = pd.to_numeric(df["Estimated_Sponsorship_Cost"].astype(str).str.replace(",",""), errors="coerce")
+    df["Latitude"] = pd.to_numeric(df["Latitude"], errors="coerce")
+    df["Longitude"] = pd.to_numeric(df["Longitude"], errors="coerce")
     return df
 
 df = load_data()
@@ -26,37 +31,37 @@ st.markdown(
 # -----------------------------
 st.sidebar.header("Filters")
 
-# Default: all unique values in dataset
+# Use dynamic defaults (all values in dataset)
 month_filter = st.sidebar.multiselect(
     "Select Month(s):",
-    options=df["Month"].sort_values().unique(),
-    default=df["Month"].sort_values().unique()
+    options=df["Month"].unique(),
+    default=df["Month"].unique()
 )
 
 season_filter = st.sidebar.multiselect(
     "Select Season(s):",
-    options=df["Season"].sort_values().unique(),
-    default=df["Season"].sort_values().unique()
+    options=df["Season"].unique(),
+    default=df["Season"].unique()
 )
 
 category_filter = st.sidebar.multiselect(
     "Select Category(ies):",
-    options=sorted(df["Category"].unique()),
-    default=sorted(df["Category"].unique())
+    options=df["Category"].unique(),
+    default=df["Category"].unique()
 )
 
 ticket_filter = st.sidebar.multiselect(
     "Free or Ticketed:",
-    options=sorted(df["Free_or_Ticketed"].unique()),
-    default=sorted(df["Free_or_Ticketed"].unique())
+    options=df["Free_or_Ticketed"].unique(),
+    default=df["Free_or_Ticketed"].unique()
 )
 
-# Apply filters only if selections are not empty
+# Apply filters
 filtered_df = df[
-    (df["Season"].isin(season_filter)) &
-    (df["Month"].isin(month_filter)) &
-    (df["Category"].isin(category_filter)) &
-    (df["Free_or_Ticketed"].isin(ticket_filter))
+    df["Month"].isin(month_filter) &
+    df["Season"].isin(season_filter) &
+    df["Category"].isin(category_filter) &
+    df["Free_or_Ticketed"].isin(ticket_filter)
 ]
 
 # -----------------------------
