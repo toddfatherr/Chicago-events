@@ -10,11 +10,14 @@ import plotly.express as px
 @st.cache_data
 def load_data():
     df = pd.read_csv("events.csv")
-    # Clean numeric columns (remove commas)
-    df["Attendance"] = pd.to_numeric(df["Attendance"].astype(str).str.replace(",", ""), errors="coerce")
-    df["Estimated_Sponsorship_Cost"] = pd.to_numeric(df["Estimated_Sponsorship_Cost"].astype(str).str.replace(",", ""), errors="coerce")
+    # Clean numeric columns
+    df["Attendance"] = pd.to_numeric(df["Attendance"].astype(str).str.replace(",",""), errors="coerce")
+    df["Estimated_Sponsorship_Cost"] = pd.to_numeric(df["Estimated_Sponsorship_Cost"].astype(str).str.replace(",",""), errors="coerce")
     df["Latitude"] = pd.to_numeric(df["Latitude"], errors="coerce")
     df["Longitude"] = pd.to_numeric(df["Longitude"], errors="coerce")
+    df["Publicity_Score"] = pd.to_numeric(df["Publicity_Score"], errors="coerce")
+    df["PrideFactor"] = pd.to_numeric(df["PrideFactor"], errors="coerce")
+    df["FitScore"] = pd.to_numeric(df["FitScore"], errors="coerce")
     return df
 
 df = load_data()
@@ -30,25 +33,21 @@ st.markdown(
 # Sidebar Filters
 # -----------------------------
 st.sidebar.header("Filters")
-
 month_filter = st.sidebar.multiselect(
     "Select Month(s):",
     options=df["Month"].unique(),
     default=df["Month"].unique()
 )
-
 season_filter = st.sidebar.multiselect(
     "Select Season(s):",
     options=df["Season"].unique(),
     default=df["Season"].unique()
 )
-
 category_filter = st.sidebar.multiselect(
     "Select Category(ies):",
     options=df["Category"].unique(),
     default=df["Category"].unique()
 )
-
 ticket_filter = st.sidebar.multiselect(
     "Free or Ticketed:",
     options=df["Free_or_Ticketed"].unique(),
@@ -89,21 +88,15 @@ filtered_df["NormAttendance"] = filtered_df["Attendance"] / filtered_df["Attenda
 filtered_df["NormCost"] = filtered_df["AdjustedCost"] / filtered_df["AdjustedCost"].max()
 demo_scores = {"Families": 1.0, "Young Adults": 0.9, "Sports Fans": 0.8, "Cultural Communities": 0.7, "General Public": 0.8}
 filtered_df["DemoScore"] = filtered_df["Demographic"].map(demo_scores).fillna(0.6)
-
-# Ensure numeric columns exist and no NaNs
-filtered_df["Publicity_Score"] = pd.to_numeric(filtered_df["Publicity_Score"], errors="coerce").fillna(0)
-filtered_df["PrideFactor"] = pd.to_numeric(filtered_df["PrideFactor"], errors="coerce").fillna(0)
-filtered_df["Media_Coverage_Score"] = pd.to_numeric(filtered_df["Media_Coverage_Score"], errors="coerce").fillna(0)
-
 filtered_df["DynamicFitScore"] = (
     attendance_w * filtered_df["NormAttendance"] +
     publicity_w * (filtered_df["Publicity_Score"] / 10) +
     pride_w * (filtered_df["PrideFactor"] / 10) +
-    media_w * (filtered_df["Media_Coverage_Score"] / 10) +
+    media_w * (filtered_df["FitScore"] / 10) +
     demo_w * filtered_df["DemoScore"] -
     cost_w * filtered_df["NormCost"]
 )
-filtered_df["ROI"] = ((filtered_df["Attendance"] * filtered_df["Publicity_Score"] * filtered_df["Media_Coverage_Score"]) / filtered_df["AdjustedCost"]).round(2)
+filtered_df["ROI"] = ((filtered_df["Attendance"] * filtered_df["Publicity_Score"] * filtered_df["FitScore"]) / filtered_df["AdjustedCost"]).round(2)
 
 # -----------------------------
 # Tabs
@@ -114,13 +107,15 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs(["Dashboard","Visualizations","Map","Info
 # Tab 1: Dashboard
 # -----------------------------
 with tab1:
-    st.subheader("Filtered Events")
+    st.subheader("Filtered Events with Full Metrics")
     st.dataframe(
-        filtered_df[["Event","Month","Season","Category","Demographic","Attendance","AdjustedCost","Free_or_Ticketed","Location","DynamicFitScore","ROI"]]
-        .sort_values(by="DynamicFitScore", ascending=False)
+        filtered_df[[
+            "Event","Month","Season","Category","Demographic","Attendance","AdjustedCost",
+            "Publicity_Score","PrideFactor","FitScore","DemoScore","DynamicFitScore","ROI","Free_or_Ticketed","Location"
+        ]].sort_values(by="DynamicFitScore", ascending=False)
     )
     csv_export = filtered_df.to_csv(index=False).encode("utf-8")
-    st.download_button(label="Download Filtered Data as CSV", data=csv_export, file_name="filtered_events.csv", mime="text/csv")
+    st.download_button("Download Filtered Data as CSV", csv_export, "filtered_events.csv", "text/csv")
 
 # -----------------------------
 # Tab 2: Visualizations
@@ -150,9 +145,7 @@ with tab3:
     map_df = filtered_df.dropna(subset=["Latitude", "Longitude"])
     if len(map_df) < len(filtered_df):
         st.warning(f"{len(filtered_df) - len(map_df)} events have missing coordinates and will not appear on the map.")
-    
     m = folium.Map(location=[41.8781, -87.6298], zoom_start=11)
-    
     for _, row in map_df.iterrows():
         popup_text = (
             f"<b>{row['Event']}</b><br>"
@@ -160,18 +153,20 @@ with tab3:
             f"Demographic: {row['Demographic']}<br>"
             f"Attendance: {row['Attendance']:,}<br>"
             f"Sponsorship Cost: ${row['AdjustedCost']:,}<br>"
-            f"FitScore: {row['DynamicFitScore']:.2f}<br>"
+            f"Publicity: {row['Publicity_Score']}<br>"
+            f"Pride: {row['PrideFactor']}<br>"
+            f"FitScore: {row['FitScore']}<br>"
+            f"DemoScore: {row['DemoScore']:.2f}<br>"
+            f"DynamicFitScore: {row['DynamicFitScore']:.2f}<br>"
             f"ROI: {row['ROI']}"
         )
-        # Use a small map pin instead of image outline
         folium.Marker(
             location=[row["Latitude"], row["Longitude"]],
             popup=popup_text,
             tooltip=row["Event"],
-            icon=folium.Icon(color="blue", icon="info-sign")
+            icon=folium.Icon(color="red", icon="info-sign")  # Pinpoint style
         ).add_to(m)
-    
-    st_map = st_folium(m, width=900, height=600)
+    st_folium(m, width=900, height=600)
 
 # -----------------------------
 # Tab 4: Info
@@ -184,10 +179,9 @@ with tab4:
         "Formulas:\n"
         "```\n"
         "FitScore = (Attendance_w * NormAttendance) + (Publicity_w * Publicity/10) + "
-        "(Pride_w * PrideFactor/10) + (Media_w * MediaCoverage/10) + (Demo_w * DemoScore) - (Cost_w * NormCost)\n"
-        "ROI = (Attendance * Publicity Score * Media Coverage Score) / AdjustedCost\n"
-        "```\n"
-        "Adjust all weights and budget using the sidebar sliders."
+        "(Pride_w * PrideFactor/10) + (Media_w * FitScore/10) + (Demo_w * DemoScore) - (Cost_w * NormCost)\n"
+        "ROI = (Attendance * Publicity Score * FitScore) / AdjustedCost\n"
+        "```"
     )
 
 # -----------------------------
@@ -231,12 +225,10 @@ with tab5:
 
             recommended_events = [events[i] for i in selected_indices]
             recommended_df = pd.DataFrame(recommended_events).sort_values(by="CombinedScore", ascending=False)
-            st.dataframe(recommended_df[["Event","Month","Season","Category","Demographic","Attendance","AdjustedCost","DynamicFitScore","ROI","CombinedScore"]])
+            st.dataframe(recommended_df[[
+                "Event","Month","Season","Category","Demographic","Attendance",
+                "AdjustedCost","DynamicFitScore","ROI","CombinedScore"
+            ]])
 
             csv_export = recommended_df.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                label="Download Optimized Events CSV",
-                data=csv_export,
-                file_name="optimized_events.csv",
-                mime="text/csv"
-            )
+            st.download_button("Download Optimized Events CSV", csv_export, "optimized_events.csv", "text/csv")
