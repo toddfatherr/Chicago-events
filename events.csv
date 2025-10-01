@@ -47,4 +47,21 @@ Chicago Theatre Week,February,Winter,Cultural,20000,General Public,Tradition,7,7
 Maxwell Street Market,May,Spring,Market,50000,Families,Tradition,6,6,5.5,Free,Near South Side,10000,5,Near South Side,41.8674,-87.6323,https://www.chicago.gov/city/en/depts/dca/supp_info/maxwell_street_market.html,Low
 Taste of Greektown,August,Summer,Cultural Festival,40000,Cultural Communities,Food Celebration,7,7,6.7,Free,Greektown,20000,6,Near West Side,41.8782,-87.6473,https://greektownchicago.org/,Low
 Taste of Mexico,September,Fall,Cultural Festival,40000,Cultural Communities,Food Celebration,7,7,6.7,Free,Pilsen,20000,6,Pilsen,41.8576,-87.6690,https://www.enlacechicago.org/,Low
+Event,Month,Season,Category,Attendance,Demographic,Emotional_Connection,Publicity_Score,PrideFactor,FitScore,Free_or_Ticketed,Location,Estimated_Sponsorship_Cost,Media_Coverage_Score,Neighborhood,Latitude,Longitude,Source,Confidence
+Naperville Ribfest,July,Summer,Food Festival,25000,General Public,Fun & Community,8,7,7.5,Free,Naperville,20000,7,Naperville,41.7508,-88.1535,https://www.napervilleribfest.com/,High
+Northbrook Farmers Market,June,Summer,Market,8000,Families,Community Pride,7,6,6.8,Free,Northbrook,5000,6,Northbrook,42.1270,-87.8217,https://www.northbrook.il.us/220/Farmers-Market,Medium
+Wilmette Sounds of Summer Concert,July,Summer,Music Series,12000,General Public,Entertainment,8,7,7.2,Free,Wilmette,7000,6,Wilmette,42.0772,-87.7276,https://www.wilmetteparks.org/,Medium
+Oak Brook Art Fair,September,Fall,Cultural Festival,15000,General Public,Arts Appreciation,7,6,6.9,Ticketed,Oak Brook,15000,7,Oak Brook,41.8386,-87.9361,https://oakbrookparkdistrict.com/,Medium
+Highland Park Ravinia Festival,June,Summer,Music Festival,50000,General Public,Cultural Enrichment,9,8,8.5,Ticketed,Highland Park,200000,9,Highland Park,42.1830,-87.7712,https://www.ravinia.org/,High
+Elmhurst Cycling Classic,June,Summer,Sports Festival,10000,General Public,Community Engagement,8,7,7.5,Free,Elmhurst,5000,7,Elmhurst,41.8990,-87.9400,https://www.elmhurstcyclingclassic.com/,Medium
+Downers Grove Summer Concert Series,July,Summer,Music Series,15000,General Public,Community Engagement,7,6,6.8,Free,Downers Grove,3000,6,Downers Grove,41.8080,-88.0113,https://www.downers.us/,Medium
+Glen Ellyn Movie in the Park,July,Summer,Outdoor Cinema,5000,Families,Community Engagement,6,5,5.8,Free,Glen Ellyn,2000,5,Glen Ellyn,41.8763,-88.0736,https://www.glenellyn.org/,Low
+Arlington Heights Street Fair,August,Summer,Street Festival,12000,Young Adults,Entertainment,7,6,6.9,Free,Arlington Heights,5000,6,Arlington Heights,42.0884,-87.9806,https://www.ahstreetfair.org/,Medium
+Skokie Festival of Cultures,September,Fall,Cultural Festival,10000,Cultural Communities,Cultural Pride,7,7,7.1,Free,Skokie,6000,7,Skokie,42.0324,-87.7416,https://www.skokie.org/,Medium
+Des Plaines Summerfest,July,Summer,Music Festival,15000,General Public,Community Pride,8,7,7.5,Free,Des Plaines,7000,6,Des Plaines,42.0334,-87.8834,https://www.desplaines.org/,Medium
+Gurnee Days Festival,June,Summer,Fair,20000,General Public,Community Pride,8,7,7.6,Free,Gurnee,10000,7,Gurnee,42.3709,-87.9342,https://www.gurnee.il.us/,High
+Libertyville Art in the Park,August,Summer,Cultural/Art,8000,General Public,Arts Appreciation,7,6,6.9,Free,Libertyville,5000,6,Libertyville,42.2834,-87.9482,https://www.libertyville.com/,Medium
+Wheaton French Market,May,Spring,Market,5000,General Public,Community Engagement,6,5,5.8,Free,Wheaton,3000,5,Wheaton,41.8675,-88.1070,https://www.wheaton.il.us/,Low
+Barrington Concerts in the Park,July,Summer,Music Series,7000,General Public,Entertainment,7,6,6.9,Free,Barrington,4000,6,Barrington,42.1399,-88.1465,https://www.barrington-il.gov/,Medium
+Hinsdale Fine Arts Festival,September,Fall,Cultural Festival,10000,General Public,Arts Appreciation,8,7,7.5,Ticketed,Hinsdale,12000,7,Hinsdale,41.8053,-87.9515,https://www.villageofhinsdale.org/,High
 
