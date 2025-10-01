@@ -10,9 +10,9 @@ import plotly.express as px
 @st.cache_data
 def load_data():
     df = pd.read_csv("events.csv")
-    # Clean numeric columns (remove commas)
-    df["Attendance"] = pd.to_numeric(df["Attendance"].astype(str).str.replace(",",""), errors="coerce")
-    df["Estimated_Sponsorship_Cost"] = pd.to_numeric(df["Estimated_Sponsorship_Cost"].astype(str).str.replace(",",""), errors="coerce")
+    # Clean numeric columns
+    df["Attendance"] = pd.to_numeric(df["Attendance"].astype(str).str.replace(",", ""), errors="coerce")
+    df["Estimated_Sponsorship_Cost"] = pd.to_numeric(df["Estimated_Sponsorship_Cost"].astype(str).str.replace(",", ""), errors="coerce")
     df["Latitude"] = pd.to_numeric(df["Latitude"], errors="coerce")
     df["Longitude"] = pd.to_numeric(df["Longitude"], errors="coerce")
     return df
@@ -31,7 +31,6 @@ st.markdown(
 # -----------------------------
 st.sidebar.header("Filters")
 
-# Use dynamic defaults (all values in dataset)
 month_filter = st.sidebar.multiselect(
     "Select Month(s):",
     options=df["Month"].unique(),
@@ -142,7 +141,9 @@ with tab2:
 # -----------------------------
 with tab3:
     st.subheader("Map of Events")
-    map_df = filtered_df.dropna(subset=["Latitude", "Longitude"])
+    map_df = filtered_df.dropna(subset=["Latitude", "Longitude"]).copy()
+    map_df["Latitude"] = map_df["Latitude"].astype(float)
+    map_df["Longitude"] = map_df["Longitude"].astype(float)
     if len(map_df) < len(filtered_df):
         st.warning(f"{len(filtered_df) - len(map_df)} events have missing coordinates and will not appear on the map.")
     m = folium.Map(location=[41.8781, -87.6298], zoom_start=11)
@@ -159,7 +160,8 @@ with tab3:
         folium.Marker(
             location=[row["Latitude"], row["Longitude"]],
             popup=popup_text,
-            tooltip=row["Event"]
+            tooltip=row["Event"],
+            icon=folium.Icon(color="blue", icon="info-sign")  # fixes blank marker issue
         ).add_to(m)
     st_map = st_folium(m, width=900, height=600)
 
